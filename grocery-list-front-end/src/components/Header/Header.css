@@ -1,0 +1,12 @@
+.header {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    height: 25vh;
+    background-color: purple;
+    text-shadow: 2px 1px 1px darkblue;
+    border-bottom: 5px solid darkblue;
+}

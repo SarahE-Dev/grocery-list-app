@@ -1,0 +1,16 @@
+.grocery-div {
+    width: 80vw;
+    margin: 7px 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.li-style {
+    font-size: 24px;
+}
+
+.li-style-isDone {
+    text-decoration: line-through;
+}
