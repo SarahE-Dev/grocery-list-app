@@ -11,6 +11,10 @@ const grocerySchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now()
+    },
+    priority: {
+        type: Boolean,
+        default: false
     }
 })
 

@@ -28,7 +28,7 @@ export class GroceryList extends Component {
 
     handleOnSubmit = async (event) => {
         event.preventDefault()
-        const found = this.state.groceryList.some(el=>el.item === this.state.groceryInput)
+        const found = this.state.groceryList.some(el=>el.grocery === this.state.groceryInput)
         if(found){
             this.setState({
                 alert: "This grocery item already exists."
@@ -108,7 +108,7 @@ export class GroceryList extends Component {
         })
     }
 
-    sortGroceriesByDate = () =>{
+    sortGroceriesByAscDate = () =>{
         let updatedArray = this.state.groceryList.sort((a, b)=>{
             return new Date(a.date)- new Date(b.date)
         })
@@ -117,11 +117,62 @@ export class GroceryList extends Component {
         })
     }
 
-    sortGroceriesAlphabetically = () => {
-        let updatedArray = this.state.groceryList.sort((a, b)=>a.todo.localeCompare(b.todo))
+    sortGroceriesByDescDate = () =>{
+        let updatedArray = this.state.groceryList.sort((a, b)=>{
+            return new Date(b.date)- new Date(a.date)
+        })
         this.setState({
             groceryList: updatedArray
         })
+    }
+
+    sortByPurchased = ()=> {
+        let updatedArray = this.state.groceryList.sort((x, y)=>{
+            return (x.purchased===y.purchased)? 0 : x.purchased? -1 : 1
+        })
+        this.setState({
+            groceryList: updatedArray
+        })
+    }
+
+    sortByNotPurchased = () => {
+        let updatedArray = this.state.groceryList.sort((x, y)=>{
+            return (x.purchased === y.purchased)? 0 : x.purchased? 1 : -1
+        })
+        this.setState({
+            groceryList: updatedArray
+        })
+    }
+
+
+    sortGroceriesAlphabetically = () => {
+        let updatedArray = this.state.groceryList.sort((a, b)=>a.grocery.localeCompare(b.grocery))
+        this.setState({
+            groceryList: updatedArray
+        })
+    }
+
+    handlePriorityByID = async (id, priorityValue) => {
+        try {
+            await axios.put(`http://localhost:3000/grocery/update-grocery/${id}`, {
+                priority: !priorityValue
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        let updatedArray = this.state.groceryList.map((grocery)=>{
+            if(grocery._id === id){
+                grocery.priority = !priorityValue
+            }
+            return grocery
+        })
+        let sortedArray = updatedArray.sort((x, y)=>{
+            return (x.priority===y.priority)? 0 : x.priority? -1 : 1
+        })
+        this.setState({
+            groceryList: sortedArray
+        })
+        
     }
 
     render() {
@@ -129,20 +180,25 @@ export class GroceryList extends Component {
       <div className='main'>
         <div className="form-div">
             <form className='form'>
-                {this.state.alert ? <p>{this.state.alert}</p> : ""}
+                
                 <input className='text-input' type="text" onChange={this.handleGroceryOnChange} value={this.state.groceryInput}/>
                 <Button css={"submitButton"} clickFunc={this.handleOnSubmit} text={"Add to List"} />
+                
             </form>
+            {this.state.alert ? <p style={{textAlign: 'center'}}>{this.state.alert}</p> : ""}
         </div>
         <div className="grocerylist-div">
             <div className="sort-div">
-                <Button clickFunc={this.sortGroceriesByDate} text={"Sort by Date"} />
+                <Button clickFunc={this.sortGroceriesByAscDate} text={"Sort by Date ↓"} />
+                <Button clickFunc={this.sortGroceriesByDescDate} text={"Sort by Date ↑ "} />
                 <Button clickFunc={this.sortGroceriesAlphabetically} text={"Sort Alphabetically"} />
+                <Button clickFunc={this.sortByPurchased} text={"Sort by Purchased"} />
+                <Button clickFunc={this.sortByNotPurchased} text={"Sort by Unpurchased"} />
             </div>
             <ul>
                 {this.state.groceryList.map((grocery)=>{
                     return (
-                        <Grocery key={grocery._id} grocery={grocery} handleDeleteByID={this.handleDeleteByID} handlePurchasedByID={this.handlePurchasedByID} handleEditByID={this.handleEditByID} />
+                        <Grocery key={grocery._id} grocery={grocery} handleDeleteByID={this.handleDeleteByID} handlePurchasedByID={this.handlePurchasedByID} handleEditByID={this.handleEditByID} handlePriorityByID={this.handlePriorityByID} />
                     )
                 })}
             </ul>

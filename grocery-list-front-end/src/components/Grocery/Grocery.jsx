@@ -25,14 +25,23 @@ export class Grocery extends Component {
         })
     }
 
+    handleCheckboxChange = (event) => {
+        this.props.handlePriorityByID(this.props.grocery._id, this.props.grocery.priority)
+        
+        
+    }
+
   render() {
-    const { grocery, purchased, _id, date } = this.props.grocery
+    const { grocery, purchased, _id, date, priority } = this.props.grocery
     const { handlePurchasedByID, handleDeleteByID } = this.props
     return (
       <div className='grocery-div'>
+        <div className="li-check">
+            <input onChange={this.handleCheckboxChange} type="checkbox" id="checkbox" />
         {
             this.state.canEdit ? <input type="text" value={this.state.editInput} onChange={this.handleOnChange} /> : <li className={`li style ${purchased ? "li-style-isDone" : ""}`} >{grocery}</li>
         }
+        </div>
         <div className="button-div">
             <button id="edit" onClick={this.handleEditOnClick} >{this.state.canEdit ? "Done" : "Edit"}</button>
             <button id="purchased" onClick={()=>handlePurchasedByID(_id, purchased)} >Purchased</button>
