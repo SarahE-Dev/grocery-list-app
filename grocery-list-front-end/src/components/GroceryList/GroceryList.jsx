@@ -196,6 +196,7 @@ export class GroceryList extends Component {
                 <Button clickFunc={this.sortByNotPurchased} text={"Sort by Unpurchased"} />
             </div>
             <ul>
+                <p>Check box to make priority.</p>
                 {this.state.groceryList.map((grocery)=>{
                     return (
                         <Grocery key={grocery._id} grocery={grocery} handleDeleteByID={this.handleDeleteByID} handlePurchasedByID={this.handlePurchasedByID} handleEditByID={this.handleEditByID} handlePriorityByID={this.handlePriorityByID} />
